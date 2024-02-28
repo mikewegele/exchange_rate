@@ -51,24 +51,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
 
-    val exchangeRate = produceState<ExchangeRate?>(initialValue = null) {
-        CurrencyApi().getExchangeEuro(
-            onSuccess = {
-                value = it
-            },
-            onError = {
-                Log.d("ERROR", it.message.toString())
-            }
-        )
-    }
-
     return BitcoinTheme {
         Box(modifier = Modifier
             .fillMaxSize()
             .background(Black80)) {
-            if (exchangeRate.value !== null) {
-                ExchangeScreen(exchangeRate = exchangeRate.value!!)
-            }
+            ExchangeScreen()
         }
     }
 }

@@ -33,7 +33,6 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ExchangeScreen(
-    exchangeRate: ExchangeRate,
     modifier: Modifier = Modifier
 ) {
     val currency = produceState<Currency?>(initialValue = null) {
@@ -51,29 +50,15 @@ fun ExchangeScreen(
         return
     }
 
-    val euroRate = exchangeRate.rates["eur"]
     val mapped = CurrencyService().getBTCtoEuros(currency.value!!)
 
     return Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+    ) {
         TitleScreen()
-        euroRate?.let { HeaderScreen(euroRate = it) }
-        euroRate?.let { DualTextWithIcon(euroRate = it) }
-        LazyColumn {
-            items(mapped) { item: CurrencyObject ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = item.day)
-                    Text(text = String.format("%.2f€", item.price))
-                }
-            }
-        }
+        CurrentExchangeRateScreen()
+        ExchangeRateTable(mapped = mapped)
     }
 }
