@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
@@ -57,8 +59,12 @@ fun ExchangeScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TitleScreen()
+        TitleScreen(text = "Wechselkurs", fontSize = 30)
         CurrentExchangeRateScreen()
+        Divider(
+            Modifier.padding(top = 8.dp)
+        )
+        TitleScreen(text = "BTC / Euro der letzen 14 Tage", fontSize = 26)
         ExchangeRateTable(mapped = mapped)
     }
 }
