@@ -1,7 +1,75 @@
 package app.tbo.bitcoin.data.remote
 
-interface CurrencyApi {
+import app.tbo.bitcoin.data.local.Currency
+import app.tbo.bitcoin.data.mapper.toCurrency
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.lang.StringBuilder
+import java.net.HttpURLConnection
+import java.net.URL
 
-    @GET
+class CurrencyApi {
 
+    private val BASE_URL = "https://api.coingecko.com/api/v3"
+    private val id = "bitcoin"
+    private val vsCurrency = "eur"
+    private val days = 14
+    private val interval = "daily"
+    private val precision = 2
+
+    fun getExchangeRates(
+        onSuccess: (Currency) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val url = "${BASE_URL}/coins/${id}/market_chart?vs_currency=${vsCurrency}&days=${days}&interval=${interval}&precision=${precision}"
+            getFromApi<CurrencyTO>(
+                url = url,
+                onSuccess = {
+                    onSuccess(it.toCurrency())
+                },
+                onError = onError
+            )
+        }
+    }
+
+    private inline fun <reified T> getFromApi(
+        url: String,
+        crossinline onSuccess: (T) -> Unit,
+        crossinline onError: (Exception) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val connection = URL(url).openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Accept", "application/json")
+            try {
+                val reader = InputStreamReader(connection.inputStream)
+                reader.use { input ->
+                    val response = StringBuilder()
+                    val bufferedReader = BufferedReader(input)
+                    bufferedReader.forEachLine {
+                        response.append(it.trim())
+                    }
+                    launch(Dispatchers.Main) {
+                        onSuccess(parseJson(response.toString()))
+                    }
+                }
+            } catch (e: Exception) {
+                launch(Dispatchers.Main) {
+                    onError(Exception("HTTP Request failed"))
+                }
+            } finally {
+                connection.disconnect()
+            }
+        }
+    }
+
+    inline fun <reified T> parseJson(text: String): T {
+        return Gson().fromJson(text, T::class.java)
+    }
 }

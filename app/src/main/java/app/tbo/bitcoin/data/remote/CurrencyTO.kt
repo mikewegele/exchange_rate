@@ -1,8 +1,13 @@
 package app.tbo.bitcoin.data.remote
 
+import com.google.gson.annotations.SerializedName
+
 data class CurrencyTO(
-    val name: String,
-    val unit: String,
-    val value: Double,
-    val type: String,
+    @SerializedName("prices")
+    var prices: List<List<Double>> = arrayListOf(),
+    @SerializedName("market_caps")
+    var marketCaps: List<List<Double>> = arrayListOf(),
+    @SerializedName("total_volumes")
+    var totalVolumes: List<List<Double>> = arrayListOf()
 )
+
