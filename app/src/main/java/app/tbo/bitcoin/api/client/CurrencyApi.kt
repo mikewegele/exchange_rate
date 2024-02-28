@@ -42,7 +42,7 @@ class CurrencyApi {
         }
     }
 
-    suspend fun getExchangeEuro(
+    suspend fun getExchangeRate(
         onSuccess: (ExchangeRate) -> Unit,
         onError: (Exception) -> Unit
     ) {

@@ -4,11 +4,12 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,18 +35,16 @@ import androidx.compose.ui.unit.sp
 import app.tbo.bitcoin.R
 import app.tbo.bitcoin.data.local.ExchangeRate
 import app.tbo.bitcoin.data.local.ExchangeRateUnit
+import app.tbo.bitcoin.domain.CurrencyService
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HeaderScreen(exchangeRate: ExchangeRate) {
+fun HeaderScreen(exchangeRate: ExchangeRate, selectedCurrency: ExchangeRateUnit?, onSelectedCurrencyChanged: (ExchangeRateUnit?) -> Unit) {
 
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(exchangeRate.rates["eur"]?.name ?: "Euro") }
 
     var exchangeRateNames = exchangeRate.rates.values.toList().map { it.name }
 
-    println("HELLO")
-    println(exchangeRateNames)
 
         Row(
             modifier = Modifier
@@ -69,28 +67,28 @@ fun HeaderScreen(exchangeRate: ExchangeRate) {
                     .clickable(onClick = { expanded = true })
                     .weight(1f)
             ) {
-                ReadonlyTextField(
-                    value = selectedText,
-                    textStyle = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center),
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)},
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                    modifier = Modifier.menuAnchor()
+                IconAndText(text = selectedCurrency?.name ?: "Euro", modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .menuAnchor(),
+                    icon = Icons.Rounded.ArrowDropDown
                 )
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = {expanded = false}
+                    onDismissRequest = {expanded = false},
+                    modifier = Modifier.requiredHeight(300.dp)
                 ) {
                     exchangeRateNames.forEach { item ->
                         DropdownMenuItem(
-                            text = { Text(text = item,) },
+                            text = { Text(text = item) },
                             onClick = {
                                 expanded = false
-                                selectedText = item
+                                onSelectedCurrencyChanged(CurrencyService().getExchangeRateByName(exchangeRate, item))
                             }
                         )
                     }
                     Text(
-                        fontSize = 28.sp,
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.SemiBold,
                         text = "Euro",
                         modifier = Modifier.weight(1f),

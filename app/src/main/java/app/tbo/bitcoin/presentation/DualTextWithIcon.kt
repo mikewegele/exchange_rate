@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import app.tbo.bitcoin.data.local.ExchangeRateUnit
 
 @Composable
-fun DualTextWithIcon(euroRate: ExchangeRateUnit) {
+fun DualTextWithIcon(rate: ExchangeRateUnit) {
 
     Row(
         modifier = Modifier
@@ -29,15 +29,15 @@ fun DualTextWithIcon(euroRate: ExchangeRateUnit) {
     ) {
         Text(
             text = "1",
-            fontSize = 28.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            fontSize = 28.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
-            text = "${String.format("%.2f", euroRate.value)} ${euroRate.unit}",
+            text = "${String.format("%.2f", rate.value)} ${rate.unit}",
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
