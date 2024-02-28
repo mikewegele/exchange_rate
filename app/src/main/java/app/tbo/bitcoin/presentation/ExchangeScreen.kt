@@ -17,7 +17,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,8 +42,13 @@ import java.time.format.DateTimeFormatter
 fun ExchangeScreen(
     modifier: Modifier = Modifier
 ) {
-    val currency = produceState<Currency?>(initialValue = null) {
+    var vsCurrency by remember {
+        mutableStateOf("eur")
+    }
+
+    val currency = produceState<Currency?>(initialValue = null, key1 = vsCurrency) {
         CurrencyApi().getExchangeRates(
+            vsCurrency = vsCurrency,
             onSuccess = {
                 value = it
             },
@@ -48,11 +58,28 @@ fun ExchangeScreen(
         )
     }
 
-    if (currency.value == null) {
+    val exchangeRate = produceState<ExchangeRate?>(initialValue = null) {
+        CurrencyApi().getExchangeRate(
+            onSuccess = {
+                value = it
+            },
+            onError = {
+                Log.d("ERROR", it.message.toString())
+            }
+        )
+    }
+    if (exchangeRate.value == null) {
         return
     }
 
-    val mapped = CurrencyService().getBTCtoEuros(currency.value!!)
+    var selectedCurrency by remember { mutableStateOf(exchangeRate.value!!.rates["eur"]) }
+
+
+    if (currency.value == null || selectedCurrency == null) {
+        return
+    }
+
+    val mapped = CurrencyService().getBTCtoCurrency(selectedCurrency!!, currency.value!!)
 
     return Column(
         modifier = Modifier.fillMaxSize(),
@@ -60,7 +87,11 @@ fun ExchangeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TitleScreen(text = "Wechselkurs", fontSize = 30)
-        CurrentExchangeRateScreen()
+        CurrentExchangeRateScreen(
+            exchangeRate.value!!,
+            selectedCurrency!!,
+            onSelectedCurrencyChanged = {selectedCurrency = it},
+            onVsCurrencyChanged = {vsCurrency = it})
         Divider(
             Modifier.padding(top = 8.dp)
         )

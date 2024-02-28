@@ -6,6 +6,7 @@ import app.tbo.bitcoin.data.local.Currency
 import app.tbo.bitcoin.data.local.ExchangeRate
 import app.tbo.bitcoin.api.mapper.mapToExchangeRate
 import app.tbo.bitcoin.api.mapper.toCurrency
+import app.tbo.bitcoin.data.util.JsonParser
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,12 +22,12 @@ class CurrencyApi {
 
     private val BASE_URL = "https://api.coingecko.com/api/v3"
     private val id = "bitcoin"
-    private val vsCurrency = "eur"
     private val days = 14
     private val interval = "daily"
     private val precision = 2
 
     fun getExchangeRates(
+        vsCurrency: String = "eur",
         onSuccess: (Currency) -> Unit,
         onError: (Exception) -> Unit
     ) {
@@ -82,7 +83,7 @@ class CurrencyApi {
                         response.append(it.trim())
                     }
                     launch(Dispatchers.Main) {
-                        onSuccess(parseJson(response.toString()))
+                        JsonParser().fromJson<T>(response.toString(), T::class.java)?.let { onSuccess(it) }
                     }
                 }
                 reader.close()

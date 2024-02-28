@@ -9,31 +9,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import app.tbo.bitcoin.api.client.CurrencyApi
 import app.tbo.bitcoin.data.local.ExchangeRate
+import app.tbo.bitcoin.data.local.ExchangeRateUnit
+import app.tbo.bitcoin.helper.getKeyByPropertyValue
 
 @Composable
-fun CurrentExchangeRateScreen() {
+fun CurrentExchangeRateScreen(
+    exchangeRate: ExchangeRate,
+    selectedCurrency: ExchangeRateUnit,
+    onSelectedCurrencyChanged: (ExchangeRateUnit) -> Unit,
+    onVsCurrencyChanged: (String) -> Unit) {
 
-    val exchangeRate = produceState<ExchangeRate?>(initialValue = null) {
-        CurrencyApi().getExchangeRate(
-            onSuccess = {
-                value = it
-            },
-            onError = {
-                Log.d("ERROR", it.message.toString())
-            }
-        )
+    val currentRate = exchangeRate.rates.values.toList().find { it.name == selectedCurrency.name }
+
+    fun selectedCurrencyHandler(current: ExchangeRateUnit) {
+        getKeyByPropertyValue(exchangeRate.rates, "name", current.name)?.let {
+            onVsCurrencyChanged(it)
+        }
     }
-    if (exchangeRate.value == null) {
-        return
-    }
-
-    var selectedCurrency by remember { mutableStateOf(exchangeRate.value!!.rates["eur"]) }
-
-    val currentRate = exchangeRate.value!!.rates.values.toList().find { it.name == selectedCurrency?.name }
 
     HeaderScreen(
-        exchangeRate = exchangeRate.value!!,
+        exchangeRate = exchangeRate,
         selectedCurrency = selectedCurrency,
-        onSelectedCurrencyChanged = { selectedCurrency = it })
+        onSelectedCurrencyChanged = { element ->
+            if (element != null) {
+                onSelectedCurrencyChanged(element)
+            }
+            if (element != null) {
+                selectedCurrencyHandler(element)
+            }
+        })
+
     currentRate?.let { DualTextWithIcon(rate = it) }
 }

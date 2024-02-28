@@ -13,13 +13,13 @@ import java.time.format.DateTimeFormatter
 class CurrencyService {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getBTCtoEuros(currency: Currency): List<CurrencyObject> {
+    fun getBTCtoCurrency(selected: ExchangeRateUnit, currency: Currency): List<CurrencyObject> {
         val currentDate: LocalDate = LocalDate.now().minusDays(currency.prices.size.toLong())
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         return currency.prices.flatMapIndexed { day, pricesOfDay ->
             val currentDateMinusDays = currentDate.plusDays(day.toLong())
             val formattedDate = currentDateMinusDays.format(formatter)
-            pricesOfDay.drop(1).map { price -> CurrencyObject(formattedDate, price) }
+            pricesOfDay.drop(1).map { price -> CurrencyObject(formattedDate, price, selected.unit) }
         }.reversed()
     }
 
