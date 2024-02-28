@@ -1,10 +1,15 @@
-package app.tbo.bitcoin.data.remote
+package app.tbo.bitcoin.api.client
 
+import app.tbo.bitcoin.api.transport.CurrencyTO
+import app.tbo.bitcoin.api.transport.ExchangeRateTO
 import app.tbo.bitcoin.data.local.Currency
-import app.tbo.bitcoin.data.mapper.toCurrency
+import app.tbo.bitcoin.data.local.ExchangeRate
+import app.tbo.bitcoin.api.mapper.mapToExchangeRate
+import app.tbo.bitcoin.api.mapper.toCurrency
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -37,6 +42,26 @@ class CurrencyApi {
         }
     }
 
+    suspend fun getExchangeEuro(
+        onSuccess: (ExchangeRate) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        while (true) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val url = "${BASE_URL}/exchange_rates"
+                getFromApi<ExchangeRateTO>(
+                    url = url,
+                    onSuccess = {
+                        println(it.rates["eur"])
+                        onSuccess(it.mapToExchangeRate())
+                    },
+                    onError = onError
+                )
+            }
+            delay(60000);
+        }
+    }
+
     private inline fun <reified T> getFromApi(
         url: String,
         crossinline onSuccess: (T) -> Unit,
@@ -47,6 +72,7 @@ class CurrencyApi {
             connection.requestMethod = "GET"
             connection.setRequestProperty("Content-Type", "application/json")
             connection.setRequestProperty("Accept", "application/json")
+            println(connection.responseCode)
             try {
                 val reader = InputStreamReader(connection.inputStream)
                 reader.use { input ->
@@ -59,9 +85,11 @@ class CurrencyApi {
                         onSuccess(parseJson(response.toString()))
                     }
                 }
+                reader.close()
+                connection.disconnect()
             } catch (e: Exception) {
                 launch(Dispatchers.Main) {
-                    onError(Exception("HTTP Request failed"))
+                    onError(Exception(e))
                 }
             } finally {
                 connection.disconnect()

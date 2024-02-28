@@ -1,4 +1,4 @@
-package app.tbo.bitcoin.data.remote
+package app.tbo.bitcoin.api.transport
 
 import com.google.gson.annotations.SerializedName
 
