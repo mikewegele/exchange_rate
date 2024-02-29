@@ -17,6 +17,9 @@ import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
 
+/**
+ * Class for handling API calls related to currency exchange rates and Bitcoin values.
+ */
 class CurrencyApi {
 
     private val BASE_URL = "https://api.coingecko.com/api/v3"

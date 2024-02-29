@@ -10,6 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+/**
+ * Composable function to display a row with two text values.
+ *
+ * @param firstValue the first text value to display
+ * @param secondValue the second text value to display
+ */
 @Composable
 fun TextRow(firstValue: String, secondValue: String) {
     Row(

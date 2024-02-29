@@ -23,6 +23,11 @@ import androidx.compose.ui.unit.sp
 import app.tbo.bitcoin.domain.model.ExchangeRateElement
 import kotlinx.coroutines.delay
 
+/**
+ * Composable function to display a row with an icon and exchange rate information.
+ *
+ * @param rate the exchange rate element to display
+ */
 @Composable
 fun TextRowWithIcon(rate: ExchangeRateElement) {
     var second by remember { mutableIntStateOf(0) }

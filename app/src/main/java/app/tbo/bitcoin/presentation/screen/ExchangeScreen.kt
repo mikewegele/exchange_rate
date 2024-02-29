@@ -20,6 +20,9 @@ import app.tbo.bitcoin.domain.model.BitcoinValue
 import app.tbo.bitcoin.domain.model.ExchangeRate
 import app.tbo.bitcoin.domain.service.ExchangeRateService
 
+/**
+ * Composable function to display the exchange screen, which includes the current exchange rate and a table of Bitcoin exchange rates.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ExchangeScreen() {

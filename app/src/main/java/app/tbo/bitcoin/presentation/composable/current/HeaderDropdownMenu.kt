@@ -26,6 +26,13 @@ import app.tbo.bitcoin.domain.model.ExchangeRate
 import app.tbo.bitcoin.domain.model.ExchangeRateElement
 import app.tbo.bitcoin.domain.service.ExchangeRateService
 
+/**
+ * Composable function to display a header with a dropdown menu for selecting a currency.
+ *
+ * @param exchangeRate the exchange rate data
+ * @param selectedCurrency the currently selected currency
+ * @param onSelectedCurrencyChanged the callback for when the selected currency changes
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HeaderDropdownMenu(

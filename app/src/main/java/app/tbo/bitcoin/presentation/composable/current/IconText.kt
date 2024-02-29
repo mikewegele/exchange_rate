@@ -17,6 +17,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Composable function to display a row with text and an icon.
+ *
+ * @param text the text to display
+ * @param modifier the modifier for the text
+ * @param icon the icon to display
+ */
 @Composable
 fun IconText(text: String, modifier: Modifier = Modifier, icon: ImageVector) {
     Row(

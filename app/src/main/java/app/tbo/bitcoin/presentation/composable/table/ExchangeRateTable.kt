@@ -7,6 +7,12 @@ import androidx.compose.ui.Modifier
 import app.tbo.bitcoin.domain.model.BitcoinValueElement
 import app.tbo.bitcoin.presentation.composable.current.TextRow
 
+/**
+ * Composable function to display a table of exchange rates.
+ *
+ * @param modifier the modifier for the table
+ * @param mapped the list of BitcoinValueElement to display
+ */
 @Composable
 fun ExchangeRateTable(modifier: Modifier = Modifier, mapped: List<BitcoinValueElement>) {
     LazyColumn {

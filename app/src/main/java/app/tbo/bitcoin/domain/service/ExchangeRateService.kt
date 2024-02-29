@@ -9,6 +9,9 @@ import app.tbo.bitcoin.domain.model.ExchangeRateElement
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+/**
+ * Service class for handling Bitcoin exchange rates and currency conversions.
+ */
 class ExchangeRateService {
 
     @RequiresApi(Build.VERSION_CODES.O)

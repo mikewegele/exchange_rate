@@ -8,7 +8,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
+/**
+ * Composable function to display a title with specified text and font size.
+ *
+ * @param text the text to display
+ * @param fontSize the font size for the title
+ */
 @Composable
 fun Title(text: String, fontSize: Int) {
     Text(
