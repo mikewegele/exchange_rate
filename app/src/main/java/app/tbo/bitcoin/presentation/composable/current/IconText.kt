@@ -27,7 +27,7 @@ fun IconText(text: String, modifier: Modifier = Modifier, icon: ImageVector) {
     ) {
         Text(
             modifier = modifier,
-            text =  text,
+            text = text,
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
@@ -36,7 +36,9 @@ fun IconText(text: String, modifier: Modifier = Modifier, icon: ImageVector) {
             icon,
             tint = Color.White,
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(4.dp),
+            modifier = Modifier
+                .size(24.dp)
+                .padding(4.dp),
         )
     }
 }

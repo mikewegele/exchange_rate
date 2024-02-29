@@ -31,7 +31,8 @@ class CurrencyApi {
         onError: (Exception) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val url = "${BASE_URL}/coins/${id}/market_chart?vs_currency=${vsCurrency}&days=${days}&interval=${interval}&precision=${precision}"
+            val url =
+                "${BASE_URL}/coins/${id}/market_chart?vs_currency=${vsCurrency}&days=${days}&interval=${interval}&precision=${precision}"
             getFromApi<BitcoinValueTO>(
                 url = url,
                 onSuccess = {

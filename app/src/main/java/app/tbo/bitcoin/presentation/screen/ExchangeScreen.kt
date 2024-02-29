@@ -70,11 +70,12 @@ fun ExchangeScreen() {
         CurrentExchangeRateScreen(
             exchangeRate = exchangeRate.value!!,
             selectedCurrency = selectedCurrency!!,
-            onSelectedCurrencyChanged = {selectedCurrency = it},
-            onVsCurrencyChanged = {vsCurrency = it})
+            onSelectedCurrencyChanged = { selectedCurrency = it },
+            onVsCurrencyChanged = { vsCurrency = it })
         Divider()
         BitcoinRateTableScreen(
             unit = selectedCurrency?.unit,
-            mapped = mapped)
+            mapped = mapped
+        )
     }
 }

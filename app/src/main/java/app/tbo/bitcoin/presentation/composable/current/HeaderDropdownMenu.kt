@@ -31,7 +31,8 @@ import app.tbo.bitcoin.domain.service.ExchangeRateService
 fun HeaderDropdownMenu(
     exchangeRate: ExchangeRate,
     selectedCurrency: ExchangeRateElement?,
-    onSelectedCurrencyChanged: (ExchangeRateElement?) -> Unit) {
+    onSelectedCurrencyChanged: (ExchangeRateElement?) -> Unit
+) {
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -41,30 +42,34 @@ fun HeaderDropdownMenu(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically)
-    { Text(
+        verticalAlignment = Alignment.CenterVertically
+    )
+    {
+        Text(
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
             text = "Bitcoin",
             modifier = Modifier.weight(1f),
-            textAlign = TextAlign.Center)
+            textAlign = TextAlign.Center
+        )
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = {expanded = it},
+            onExpandedChange = { expanded = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = { expanded = true })
                 .weight(1f)
         ) {
-            IconText(text = selectedCurrency?.name ?: "Euro", modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .menuAnchor(),
+            IconText(
+                text = selectedCurrency?.name ?: "Euro", modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .menuAnchor(),
                 icon = Icons.Rounded.ArrowDropDown
             )
             ExposedDropdownMenu(
                 expanded = expanded,
-                onDismissRequest = {expanded = false},
+                onDismissRequest = { expanded = false },
                 modifier = Modifier.requiredHeight(300.dp)
             ) {
                 exchangeRateNames.forEach { item ->
@@ -72,7 +77,12 @@ fun HeaderDropdownMenu(
                         text = { Text(text = item) },
                         onClick = {
                             expanded = false
-                            onSelectedCurrencyChanged(ExchangeRateService().getExchangeRateByName(exchangeRate, item))
+                            onSelectedCurrencyChanged(
+                                ExchangeRateService().getExchangeRateByName(
+                                    exchangeRate,
+                                    item
+                                )
+                            )
                         }
                     )
                 }

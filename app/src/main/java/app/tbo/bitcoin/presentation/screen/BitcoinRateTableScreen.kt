@@ -9,6 +9,7 @@ import app.tbo.bitcoin.presentation.composable.title.Title
 fun BitcoinRateTableScreen(unit: String?, mapped: List<BitcoinValueElement>) {
     Title(
         text = "BTC / ${unit} der letzten 14 Tage",
-        fontSize = 26)
+        fontSize = 26
+    )
     ExchangeRateTable(mapped = mapped)
 }

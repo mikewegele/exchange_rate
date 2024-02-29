@@ -10,7 +10,8 @@ fun CurrentExchangeRate(
     exchangeRate: ExchangeRate,
     selectedCurrency: ExchangeRateElement,
     onSelectedCurrencyChanged: (ExchangeRateElement) -> Unit,
-    onVsCurrencyChanged: (String) -> Unit) {
+    onVsCurrencyChanged: (String) -> Unit
+) {
 
     val currentRate = exchangeRate.rates.values.toList().find { it.name == selectedCurrency.name }
 

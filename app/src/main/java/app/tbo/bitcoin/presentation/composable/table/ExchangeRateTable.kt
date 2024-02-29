@@ -13,7 +13,8 @@ fun ExchangeRateTable(modifier: Modifier = Modifier, mapped: List<BitcoinValueEl
         items(mapped) { item: BitcoinValueElement ->
             TextRow(
                 firstValue = item.day,
-                secondValue = String.format("%.2f%s", item.price, item.unit))
+                secondValue = String.format("%.2f%s", item.price, item.unit)
+            )
         }
     }
 }

@@ -15,10 +15,12 @@ fun CurrentExchangeRateScreen(
 ) {
     Title(
         text = "Wechselkurs",
-        fontSize = 30)
+        fontSize = 30
+    )
     CurrentExchangeRate(
         exchangeRate = exchangeRate,
         selectedCurrency = selectedCurrency,
         onSelectedCurrencyChanged = onSelectedCurrencyChanged,
-        onVsCurrencyChanged = onVsCurrencyChanged)
+        onVsCurrencyChanged = onVsCurrencyChanged
+    )
 }

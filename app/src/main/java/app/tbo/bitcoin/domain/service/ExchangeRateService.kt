@@ -12,13 +12,17 @@ import java.time.format.DateTimeFormatter
 class ExchangeRateService {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getBTCtoCurrency(selected: ExchangeRateElement, bitcoinValue: BitcoinValue): List<BitcoinValueElement> {
+    fun getBTCtoCurrency(
+        selected: ExchangeRateElement,
+        bitcoinValue: BitcoinValue
+    ): List<BitcoinValueElement> {
         val currentDate: LocalDate = LocalDate.now().minusDays(bitcoinValue.prices.size.toLong())
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         return bitcoinValue.prices.flatMapIndexed { day, pricesOfDay ->
             val currentDateMinusDays = currentDate.plusDays(day.toLong())
             val formattedDate = currentDateMinusDays.format(formatter)
-            pricesOfDay.drop(1).map { price -> BitcoinValueElement(formattedDate, price, selected.unit) }
+            pricesOfDay.drop(1)
+                .map { price -> BitcoinValueElement(formattedDate, price, selected.unit) }
         }.reversed()
     }
 

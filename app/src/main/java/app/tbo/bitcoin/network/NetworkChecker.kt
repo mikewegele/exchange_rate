@@ -6,7 +6,7 @@ import android.net.NetworkCapabilities
 class NetworkChecker(val connectivityManager: ConnectivityManager) {
 
     fun performAction(action: () -> Unit) {
-        if(hasValidInternetConnection()){
+        if (hasValidInternetConnection()) {
             action()
         }
     }
