@@ -56,7 +56,6 @@ class CurrencyApi {
                 getFromApi<ExchangeRateTO>(
                     url = url,
                     onSuccess = {
-                        println(it.rates["eur"])
                         onSuccess(it.mapToExchangeRate())
                     },
                     onError = onError
