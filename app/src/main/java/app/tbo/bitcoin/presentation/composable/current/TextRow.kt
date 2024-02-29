@@ -1,4 +1,4 @@
-package app.tbo.bitcoin.presentation
+package app.tbo.bitcoin.presentation.composable.current
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DualText(modifier: Modifier = Modifier, firstValue: String, secondValue: String) {
+fun TextRow(firstValue: String, secondValue: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

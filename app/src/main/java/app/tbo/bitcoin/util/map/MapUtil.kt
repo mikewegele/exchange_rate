@@ -1,4 +1,4 @@
-package app.tbo.bitcoin.helper
+package app.tbo.bitcoin.util.map
 
 fun <K, V> getKeyByPropertyValue(map: Map<K, V>, propertyName: String, propertyValue: Any): K? {
     for ((key, mapValue) in map) {

@@ -1,13 +1,10 @@
-package app.tbo.bitcoin.presentation
+package app.tbo.bitcoin.presentation.composable.current
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun IconAndText(text: String, modifier: Modifier = Modifier, icon: ImageVector) {
+fun IconText(text: String, modifier: Modifier = Modifier, icon: ImageVector) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),

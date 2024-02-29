@@ -2,7 +2,7 @@ package app.tbo.bitcoin.api.transport
 
 import com.google.gson.annotations.SerializedName
 
-data class ExchangeRateUnitTO(
+data class ExchangeRateElementTO(
     @SerializedName("name")
     var name: String,
 

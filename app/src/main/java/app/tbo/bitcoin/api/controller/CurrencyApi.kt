@@ -1,13 +1,12 @@
-package app.tbo.bitcoin.api.client
+package app.tbo.bitcoin.api.controller
 
-import app.tbo.bitcoin.api.transport.CurrencyTO
+import app.tbo.bitcoin.api.transport.BitcoinValueTO
 import app.tbo.bitcoin.api.transport.ExchangeRateTO
-import app.tbo.bitcoin.data.local.Currency
-import app.tbo.bitcoin.data.local.ExchangeRate
+import app.tbo.bitcoin.domain.model.BitcoinValue
+import app.tbo.bitcoin.domain.model.ExchangeRate
 import app.tbo.bitcoin.api.mapper.mapToExchangeRate
 import app.tbo.bitcoin.api.mapper.toCurrency
-import app.tbo.bitcoin.data.util.JsonParser
-import com.google.gson.Gson
+import app.tbo.bitcoin.util.json.fromJson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,12 +27,12 @@ class CurrencyApi {
 
     fun getExchangeRates(
         vsCurrency: String = "eur",
-        onSuccess: (Currency) -> Unit,
+        onSuccess: (BitcoinValue) -> Unit,
         onError: (Exception) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val url = "${BASE_URL}/coins/${id}/market_chart?vs_currency=${vsCurrency}&days=${days}&interval=${interval}&precision=${precision}"
-            getFromApi<CurrencyTO>(
+            getFromApi<BitcoinValueTO>(
                 url = url,
                 onSuccess = {
                     onSuccess(it.toCurrency())
@@ -63,42 +62,45 @@ class CurrencyApi {
         }
     }
 
+    /* ----------------------------- private helper methods ----------------------------- */
+
     private inline fun <reified T> getFromApi(
         url: String,
         crossinline onSuccess: (T) -> Unit,
         crossinline onError: (Exception) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val connection = URL(url).openConnection() as HttpURLConnection
-            connection.requestMethod = "GET"
-            connection.setRequestProperty("Content-Type", "application/json")
-            connection.setRequestProperty("Accept", "application/json")
-            println(connection.responseCode)
             try {
-                val reader = InputStreamReader(connection.inputStream)
-                reader.use { input ->
-                    val response = StringBuilder()
-                    val bufferedReader = BufferedReader(input)
-                    bufferedReader.forEachLine {
-                        response.append(it.trim())
-                    }
-                    launch(Dispatchers.Main) {
-                        JsonParser().fromJson<T>(response.toString(), T::class.java)?.let { onSuccess(it) }
-                    }
+                val connection = createConnection(url)
+                val response = readResponse(connection)
+                launch(Dispatchers.Main) {
+                    fromJson<T>(response, T::class.java)?.let { onSuccess(it) }
                 }
-                reader.close()
-                connection.disconnect()
             } catch (e: Exception) {
                 launch(Dispatchers.Main) {
                     onError(Exception(e))
                 }
-            } finally {
-                connection.disconnect()
             }
         }
     }
 
-    inline fun <reified T> parseJson(text: String): T {
-        return Gson().fromJson(text, T::class.java)
+    private fun createConnection(url: String): HttpURLConnection {
+        val connection = URL(url).openConnection() as HttpURLConnection
+        connection.requestMethod = "GET"
+        connection.setRequestProperty("Content-Type", "application/json")
+        connection.setRequestProperty("Accept", "application/json")
+        return connection
+    }
+
+    private fun readResponse(connection: HttpURLConnection): String {
+        val reader = InputStreamReader(connection.inputStream)
+        reader.use { input ->
+            val response = StringBuilder()
+            val bufferedReader = BufferedReader(input)
+            bufferedReader.forEachLine {
+                response.append(it.trim())
+            }
+            return response.toString()
+        }
     }
 }
