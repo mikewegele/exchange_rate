@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -24,6 +26,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun TextRowWithIcon(rate: ExchangeRateElement) {
     var second by remember { mutableIntStateOf(0) }
+    var lastValue by remember { mutableStateOf(rate.value) }
+    var textColor by remember { mutableStateOf(Color.White) }
 
     LaunchedEffect(rate.value) {
         second = 0
@@ -31,6 +35,15 @@ fun TextRowWithIcon(rate: ExchangeRateElement) {
             delay(1000)
             second++
         }
+    }
+
+    LaunchedEffect(rate.value) {
+        val newValue = rate.value
+        val color = if (newValue < lastValue) Color.Red else Color.Green
+        textColor = color
+        delay(1500)
+        textColor = Color.White
+        lastValue = newValue
     }
 
     Column(
@@ -52,7 +65,8 @@ fun TextRowWithIcon(rate: ExchangeRateElement) {
             Text(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold,
-                text = "${String.format("%.2f", rate.value)}${rate.unit}",
+                text = "${String.format("%.2f", rate.value)} ${rate.unit}",
+                color = textColor,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center
             )
